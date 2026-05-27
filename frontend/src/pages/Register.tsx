@@ -20,20 +20,47 @@ export default function Register() {
   const { register, isLoading } = useAuthStore();
   const navigate = useNavigate();
 
+  const validateEmail = (emailStr: string) => {
+    return /\S+@\S+\.\S+/.test(emailStr);
+  };
+
+  const validatePassword = (pwd: string) => {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?\":{}|<>]).{8,}$/;
+    return regex.test(pwd);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
-      setError("Please complete all profile details.");
+    if (!name.trim()) {
+      setError("Please enter your full name.");
       return;
     }
-
-    if (password.length < 6) {
-      setError("Password must contain at least 6 characters.");
+    if (name.trim().length < 2) {
+      setError("Name must contain at least 2 characters.");
       return;
     }
-
+    if (!email.trim()) {
+      setError("Please enter your email address.");
+      return;
+    }
+    if (!validateEmail(email.trim())) {
+      setError("Please enter a valid email address (e.g., name@domain.com).");
+      return;
+    }
+    if (!password.trim()) {
+      setError("Please enter a password.");
+      return;
+    }
+    if (!validatePassword(password)) {
+      setError("Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character (e.g., !@#$%^&*).");
+      return;
+    }
     if (password !== confirmPassword) {
       setError("Passwords do not match. Check spelling.");
+      return;
+    }
+    if (!acceptedTerms) {
+      setError("You must accept the Privacy Policy and Terms of Service to create an account.");
       return;
     }
 
@@ -43,8 +70,12 @@ export default function Register() {
       navigate("/chat");
     } catch (err: any) {
       console.error(err);
-      const detail = err.response?.data?.detail || "Registration failed. Email might already be taken.";
-      setError(detail);
+      const detail = err.response?.data?.detail;
+      if (detail === "Email already registered") {
+        setError("This email is already registered! It is an existing account. Please sign in or use a different email.");
+      } else {
+        setError(detail || "Registration failed. Please check your credentials and try again.");
+      }
     }
   };
 

@@ -27,11 +27,23 @@ export default function Login() {
   const { login, isLoading } = useAuthStore();
   const navigate = useNavigate();
 
+  const validateEmail = (emailStr: string) => {
+    return /\S+@\S+\.\S+/.test(emailStr);
+  };
+
   // Handle standard password authentication
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim() || !password.trim()) {
-      setError("Please fill out all credentials fields.");
+    if (!email.trim()) {
+      setError("Please enter your email address.");
+      return;
+    }
+    if (!validateEmail(email.trim())) {
+      setError("Please enter a valid email address (e.g., name@domain.com).");
+      return;
+    }
+    if (!password.trim()) {
+      setError("Please enter your password.");
       return;
     }
 
@@ -41,8 +53,12 @@ export default function Login() {
       navigate("/chat");
     } catch (err: any) {
       console.error(err);
-      const detail = err.response?.data?.detail || "Authentication failed. Double check your credentials.";
-      setError(detail);
+      const detail = err.response?.data?.detail;
+      if (detail === "Invalid credentials") {
+        setError("Invalid account or password! If you don't have an account, please click 'Create a Free Account' below to sign up.");
+      } else {
+        setError(detail || "Authentication failed. Double check your credentials.");
+      }
     }
   };
 
@@ -50,6 +66,10 @@ export default function Login() {
   const handleSendOTP = async () => {
     if (!email.trim()) {
       setError("Please enter your email address to request an OTP code.");
+      return;
+    }
+    if (!validateEmail(email.trim())) {
+      setError("Please enter a valid email address (e.g., name@domain.com).");
       return;
     }
     
@@ -73,8 +93,20 @@ export default function Login() {
   // Handle OTP verification and sign in
   const handleOTPSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim() || !otp.trim()) {
-      setError("Please complete both Email and Verification Code fields.");
+    if (!email.trim()) {
+      setError("Please enter your email address.");
+      return;
+    }
+    if (!validateEmail(email.trim())) {
+      setError("Please enter a valid email address (e.g., name@domain.com).");
+      return;
+    }
+    if (!otp.trim()) {
+      setError("Please enter the verification code.");
+      return;
+    }
+    if (otp.length !== 6) {
+      setError("Please enter the complete 6-digit verification code.");
       return;
     }
 
