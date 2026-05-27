@@ -245,12 +245,12 @@ async def stream_response(
 # Non-streaming (used by trial chat)
 # ---------------------------------------------------------------------------
 
-async def simple_response(message: str, model: str = None) -> str:
+async def simple_response(message: str, model: str = None, task_override: str = None) -> str:
     resolved = _resolve(model)
-    task = detect_task_purpose(message)
+    task = task_override if task_override is not None else detect_task_purpose(message)
     
     system_content = SYSTEM_PROMPT
-    if task != "general":
+    if task != "general" and task in TASK_PROMPTS:
         system_content += f"\n\n[Active Mode Override]\n{TASK_PROMPTS[task]}"
         
     url = f"{GROQ_BASE_URL}/chat/completions"
@@ -262,10 +262,10 @@ async def simple_response(message: str, model: str = None) -> str:
         ],
         "stream": False,
         "max_tokens": 1024,
-        "temperature": TASK_TEMPERATURES[task],
+        "temperature": TASK_TEMPERATURES.get(task, 0.7),
     }
 
-    logger.info("Groq simple_response: model=%s → %s, task=%s, temp=%s", model, resolved, task, TASK_TEMPERATURES[task])
+    logger.info("Groq simple_response: model=%s → %s, task=%s, temp=%s", model, resolved, task, TASK_TEMPERATURES.get(task, 0.7))
 
     async with httpx.AsyncClient(timeout=60.0) as client:
         response = await client.post(url, json=payload, headers=_headers())
@@ -302,7 +302,7 @@ async def generate_chat_headline(first_message: str, model: str = None) -> str:
         f"User Query: {first_message}"
     )
     try:
-        title = await simple_response(prompt, model)
+        title = await simple_response(prompt, model, task_override="general")
         title = title.strip().strip('"').strip("'").strip(".").strip()
         # Clean any remaining markdown titles or quote wrappers
         title = re.sub(r'^(title:|headline:|subject:)\s*', '', title, flags=re.IGNORECASE)

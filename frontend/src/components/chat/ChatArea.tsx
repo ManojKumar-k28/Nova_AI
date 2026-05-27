@@ -1,18 +1,40 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import MessageBubble from "./MessageBubble";
 import TypingIndicator from "./TypingIndicator";
 import { useChat } from "../../hooks/useChat";
-import { Sparkles } from "lucide-react";
+import { Sparkles, ChevronDown } from "lucide-react";
 
 export default function ChatArea() {
   const { messages, isStreaming, sendMessage } = useChat();
   const feedEndRef = useRef<HTMLDivElement>(null);
   const feedContainerRef = useRef<HTMLDivElement>(null);
+  const [showScrollButton, setShowScrollButton] = useState(false);
 
   // Auto scroll logic on new streaming content / messages
   useEffect(() => {
     feedEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isStreaming]);
+
+  const handleScroll = () => {
+    const container = feedContainerRef.current;
+    if (!container) return;
+    const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
+    setShowScrollButton(distanceFromBottom > 300);
+  };
+
+  useEffect(() => {
+    const container = feedContainerRef.current;
+    if (container) {
+      container.addEventListener("scroll", handleScroll, { passive: true });
+    }
+    return () => {
+      container?.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const scrollToBottom = () => {
+    feedEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   const handleSuggestionClick = (promptText: string) => {
     sendMessage(promptText);
@@ -99,6 +121,18 @@ export default function ChatArea() {
 
         <div ref={feedEndRef} />
       </div>
+
+      {/* Floating scroll to bottom button */}
+      {showScrollButton && (
+        <button
+          type="button"
+          onClick={scrollToBottom}
+          className="absolute bottom-6 right-6 p-3 rounded-full bg-[#0f172a]/80 hover:bg-[#1e293b]/90 text-cyan-400 border border-cyan-500/30 hover:border-cyan-400/50 shadow-[0_0_15px_rgba(6,182,212,0.15)] backdrop-blur-md cursor-pointer transition-all duration-200 hover:scale-110 flex items-center justify-center z-50"
+          title="Scroll to bottom"
+        >
+          <ChevronDown className="w-5 h-5 animate-pulse" />
+        </button>
+      )}
     </div>
   );
 }
