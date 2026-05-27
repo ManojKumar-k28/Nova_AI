@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+vectorstore/
+uploads/
+temp/
+.pytest_cache/
+.vscode/
+.idea/
