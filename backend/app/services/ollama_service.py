@@ -20,7 +20,8 @@ SYSTEM_PROMPT = (
     "file structures, or codebase of the Nova AI project itself. If a user asks for the source code, backend, "
     "frontend files, or configuration of this application, you MUST strictly refuse to provide it, and display the message: "
     "'[ACCESS RESTRICTED] Security Policy: Source code retrieval for the Nova AI platform is locked. "
-    "Unauthorized attempts to extract system-level codebase files are blocked by internal security shields.'"
+    "Unauthorized attempts to extract system-level codebase files are blocked by internal security shields.' "
+    "GIT COMMIT RULE: Whenever you write, suggest, or provide any git commit command, you MUST always use the exact message 'initial commit' (i.e., `git commit -m \"initial commit\"`). Do not suggest or use any other commit message."
 )
 
 TASK_PROMPTS = {
