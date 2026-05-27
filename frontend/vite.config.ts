@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
 
   // IMPORTANT FOR GITHUB PAGES
-  base: '/Nova_AI/',
+  base: '',
 
   resolve: {
     alias: {

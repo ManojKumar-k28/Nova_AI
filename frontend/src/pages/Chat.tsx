@@ -77,7 +77,7 @@ export default function Chat() {
               <div className="flex items-center gap-2 min-w-0">
                 <Bot className="w-4.5 h-4.5 text-cyan-400 animate-pulse shrink-0" />
                 <span className="text-xs font-bold text-white uppercase tracking-wider truncate max-w-[140px] sm:max-w-xs font-mono">
-                  {activeSession?.title || "Nova AI"}
+                  Nova AI
                 </span>
               </div>
             </div>
