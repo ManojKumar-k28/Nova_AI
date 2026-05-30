@@ -32,7 +32,7 @@ export default function TrialChat() {
   const [trialCount, setTrialCount] = useState(0);
   const [error, setError] = useState<string | null>(null);
   
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Generate or fetch trial session key
@@ -50,7 +50,12 @@ export default function TrialChat() {
   }, []);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTo({
+        top: chatContainerRef.current.scrollHeight,
+        behavior: "smooth"
+      });
+    }
   }, [messages]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -149,7 +154,7 @@ export default function TrialChat() {
       </div>
 
       {/* Messages Sandbox */}
-      <div className="flex-1 p-6 overflow-y-auto space-y-4">
+      <div ref={chatContainerRef} className="flex-1 p-6 overflow-y-auto space-y-4">
         <AnimatePresence initial={false}>
           {messages.map((msg) => (
             <motion.div
@@ -180,7 +185,6 @@ export default function TrialChat() {
             </motion.div>
           ))}
         </AnimatePresence>
-        <div ref={messagesEndRef} />
       </div>
 
       {/* Error / Limit Warning Banner */}
