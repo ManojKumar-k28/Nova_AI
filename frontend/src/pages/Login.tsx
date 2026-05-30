@@ -53,10 +53,10 @@ export default function Login() {
       navigate("/chat");
     } catch (err: any) {
       console.error(err);
-      const detail = err.response?.data?.detail;
-      if (detail === "Invalid credentials") {
-        setError("Invalid account or password! If you don't have an account, please click 'Create a Free Account' below to sign up.");
+      if (err.response?.status === 401) {
+        setError("Invalid email or password!");
       } else {
+        const detail = err.response?.data?.detail;
         setError(detail || "Authentication failed. Double check your credentials.");
       }
     }
