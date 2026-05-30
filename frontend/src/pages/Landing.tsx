@@ -1,4 +1,5 @@
-﻿import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Sparkles, ArrowRight, Database, Disc, History } from "lucide-react";
 import BackgroundScene from "../components/three/BackgroundScene";
@@ -8,6 +9,16 @@ import Navbar from "../components/layout/Navbar";
 import CursorAura from "../components/shared/CursorAura";
 
 export default function Landing() {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = 0;
+    }
+    // Also scroll the window to top just in case
+    window.scrollTo(0, 0);
+  }, []);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -22,7 +33,7 @@ export default function Landing() {
   };
 
   return (
-    <div className="relative h-screen w-full overflow-y-auto overflow-x-hidden text-slate-200">
+    <div ref={containerRef} className="relative h-screen w-full overflow-y-auto overflow-x-hidden text-slate-200">
       
       {/* 3D R3F Canvas background layers */}
       <BackgroundScene />
