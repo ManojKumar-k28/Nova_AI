@@ -51,10 +51,7 @@ export default function TrialChat() {
 
   useEffect(() => {
     if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTo({
-        top: chatContainerRef.current.scrollHeight,
-        behavior: "smooth"
-      });
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [messages]);
 
@@ -126,7 +123,7 @@ export default function TrialChat() {
   };
 
   return (
-    <div className="w-full max-w-2xl lg:max-w-none mx-auto flex flex-col glass rounded-2xl overflow-hidden shadow-2xl border border-white/10 h-[430px] sm:h-[500px] lg:h-[560px]">
+    <div className="w-full max-w-2xl lg:max-w-none mx-auto flex flex-col glass rounded-2xl overflow-hidden shadow-2xl border border-white/10 h-[430px] sm:h-[500px] lg:h-[560px]" style={{ overflowAnchor: "none" }}>
       {/* Widget Header */}
       <div className="px-6 py-4 bg-white/5 border-b border-white/5 flex items-center justify-between">
         <div className="flex items-center gap-2">

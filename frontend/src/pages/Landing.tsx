@@ -43,7 +43,7 @@ export default function Landing() {
   };
 
   return (
-    <div ref={containerRef} className="relative h-screen w-full overflow-y-auto overflow-x-hidden text-slate-200">
+    <div ref={containerRef} className="relative h-screen w-full overflow-y-auto overflow-x-hidden text-slate-200" style={{ overflowAnchor: "none" }}>
       
       {/* 3D R3F Canvas background layers */}
       <BackgroundScene />
