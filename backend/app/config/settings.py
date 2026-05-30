@@ -34,6 +34,7 @@ class Settings(BaseSettings):
     APP_NAME: str = "Nova AI"
     APP_VERSION: str = "1.0.0"
     DEBUG: bool = True
+    ALLOWED_ORIGINS: str = "http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173,http://127.0.0.1:3000"
 
     @field_validator("VECTOR_DB_PATH")
     @classmethod
