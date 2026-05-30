@@ -19,6 +19,16 @@ export default function Landing() {
     window.scrollTo(0, 0);
   }, []);
 
+  const scrollToFeatures = () => {
+    const featuresSection = document.getElementById("features");
+    if (featuresSection && containerRef.current) {
+      containerRef.current.scrollTo({
+        top: featuresSection.offsetTop - 80, // Offset for the fixed Navbar
+        behavior: "smooth"
+      });
+    }
+  };
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -128,17 +138,17 @@ export default function Landing() {
           >
             <Link
               to="/chat"
-              className="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-semibold rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-purple-500/20 transition-all duration-300 transform hover:scale-[1.03] group"
+              className="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-semibold rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-purple-500/20 transition-all duration-300 transform hover:scale-[1.03] group animate-pulse"
             >
               Access Workspace Sandbox
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
-            <Link
-              to="/explore"
-              className="w-full sm:w-auto px-8 py-3.5 bg-white/5 hover:bg-white/10 text-white font-semibold rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300 flex items-center justify-center gap-2"
+            <button
+              onClick={scrollToFeatures}
+              className="w-full sm:w-auto px-8 py-3.5 bg-white/5 hover:bg-white/10 text-white font-semibold rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer outline-none"
             >
               Explore Capabilities
-            </Link>
+            </button>
           </motion.div>
         </motion.div>
 
@@ -156,7 +166,7 @@ export default function Landing() {
       </section>
 
       {/* Feature Grid Section */}
-      <section className="relative z-10 max-w-7xl mx-auto px-6 py-20 border-t border-white/5">
+      <section id="features" className="relative z-10 max-w-7xl mx-auto px-6 py-20 border-t border-white/5">
         <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
           <h2 className="text-2xl sm:text-4xl font-extrabold text-white">
             Designed for Absolute Privacy & High-Fidelity Performance
