@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const baseURL = import.meta.env.VITE_API_URL || (typeof window !== "undefined" ? window.location.origin : "") || "http://localhost:8000";
+const rawBaseURL = import.meta.env.VITE_API_URL || (typeof window !== "undefined" ? window.location.origin : "") || "http://localhost:8000";
+// Clean up trailing slash to prevent double-slashes (e.g. //api/chat) which trigger redirects and fail CORS preflight
+const baseURL = rawBaseURL.endsWith("/") ? rawBaseURL.slice(0, -1) : rawBaseURL;
 
 export const api = axios.create({
   baseURL,
